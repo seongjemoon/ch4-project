@@ -1,5 +1,7 @@
 <img src="img/cost.png">
 
+EC2 Public address: http://52.62.217.191:8080/
+
 1.주요 기능 (Features)
 팀원 관리 API (/api/members)
 팀원 정보 등록 (POST)
