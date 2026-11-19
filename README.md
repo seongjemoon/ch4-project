@@ -34,3 +34,12 @@ postman
 browser
 
 <img src="img/Browser.png">
+
+LV4. Docker & CI/CD 파이프라인 구축
+github action 탭 초록불 확인
+
+<img src="img/action.png">
+
+도커 컨테이너 확인
+
+<img src="img/docker.png">
