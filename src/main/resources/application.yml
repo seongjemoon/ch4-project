@@ -1,27 +1,31 @@
 server:
   port: 8080
+  address: 0.0.0.0
 
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb;MODE=MySQL
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true
   cloud:
     aws:
-      paramstore:
-        enabled: false
+      region:
+        static: ap-southeast-2
+  config:
+    import: optional:aws-parameterstore:/config/ch4-project/
+  jackson:
+    serialization:
+      indent-output: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 management:
   endpoints:
     web:
       base-path: /actuator
       exposure:
-        include: health
+        include: health,info
   endpoint:
     health:
-      show-details: always
+      show-details: when-authorized
+  info:
+    env:
+      enabled: true

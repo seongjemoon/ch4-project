@@ -1,19 +1,40 @@
+server:
+  port: 8080
+
 spring:
+  application:
+    name: ch4-project
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=MySQL
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
-    password:
+    password: ""
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
 
 management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: "health,info"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    team:
+      teamName: "스프링 6기 로컬 팀"
+      members:
+        - name: "문성제"
+        - name: "팀원2"

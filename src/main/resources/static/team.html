@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>팀 소개</title>
+    <style>
+        body { font-family: sans-serif; background: #f5f6fa; margin: 0; padding: 32px; }
+        h1 { text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; max-width: 1000px; margin: 24px auto; }
+        .card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+        .name { font-size: 18px; font-weight: bold; }
+        .tag { display: inline-block; font-size: 12px; background: #eef; border-radius: 6px; padding: 2px 8px; margin: 4px 4px 8px 0; }
+        .msg { color: #555; font-size: 14px; margin: 8px 0; }
+        a { color: #4a6cf7; text-decoration: none; font-size: 13px; margin-right: 8px; }
+    </style>
+</head>
+<body>
+<h1 id="title"></h1>
+<div class="grid" id="grid"></div>
+
+<script>
+    function el(tag, cls, text) {
+        const e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (text) e.textContent = text;
+        return e;
+    }
+    function link(label, url) {
+        const a = el('a', null, label);
+        a.href = url;
+        a.target = '_blank';
+        return a;
+    }
+
+    fetch('/api/team')
+        .then(r => r.json())
+        .then(team => {
+            document.getElementById('title').textContent = team.teamName;
+            const grid = document.getElementById('grid');
+            team.members.forEach(m => {
+                const card = el('div', 'card');
+                card.append(el('div', 'name', m.name));
+                card.append(el('span', 'tag', m.role));
+                card.append(el('span', 'tag', m.mbti));
+                card.append(el('div', 'msg', m.message));
+                card.append(link('Blog', m.blog));
+                card.append(link('GitHub', m.github));
+                grid.append(card);
+            });
+        });
+</script>
+</body>
+</html>
