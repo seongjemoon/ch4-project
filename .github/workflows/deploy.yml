@@ -45,10 +45,39 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            set -e
+
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ch4-project:latest
-            sudo docker stop ch4-project || true
-            sudo docker rm ch4-project || true
-            sudo docker run -d --name ch4-project -p 8080:8080 \
+
+            sudo docker stop ch4-project 2>/dev/null || true
+            sudo docker rm -f ch4-project 2>/dev/null || true
+            sudo docker stop my-app 2>/dev/null || true
+            sudo docker rm -f my-app 2>/dev/null || true
+            sudo pkill -f "java.*\.jar" 2>/dev/null || true
+
+            sudo docker run -d \
+              --name ch4-project \
+              -p 8080:8080 \
+              --restart unless-stopped \
               -e AWS_REGION=ap-southeast-2 \
               -e SPRING_PROFILES_ACTIVE=prod \
+              -e APP_S3_BUCKET=${{ secrets.APP_S3_BUCKET }} \
+              -e SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver \
+              -e SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}" \
+              -e SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}" \
+              -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+              -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
+              -e SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect \
               ${{ secrets.DOCKERHUB_USERNAME }}/ch4-project:latest
+
+            for i in $(seq 1 30); do
+              if curl -fsS http://localhost:8080/actuator/health >/dev/null 2>&1; then
+                echo "Health check passed!"
+                exit 0
+              fi
+              sleep 2
+            done
+
+            echo "Health check failed. Recent container logs:"
+            sudo docker logs --tail 50 ch4-project || true
+            exit 1
