@@ -61,7 +61,7 @@ jobs:
               --restart unless-stopped \
               -e AWS_REGION=ap-southeast-2 \
               -e SPRING_PROFILES_ACTIVE=prod \
-              -e APP_S3_BUCKET=${{ secrets.APP_S3_BUCKET }} \
+              -e APP_S3_BUCKET="${{ secrets.APP_S3_BUCKET }}" \
               -e SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver \
               -e SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}" \
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}" \
