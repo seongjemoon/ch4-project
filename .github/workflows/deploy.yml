@@ -51,5 +51,4 @@ jobs:
             sudo docker run -d --name ch4-project -p 8080:8080 \
               -e AWS_REGION=ap-southeast-2 \
               -e SPRING_PROFILES_ACTIVE=prod \
-              -e APP_S3_BUCKET=<버킷이름> \
               ${{ secrets.DOCKERHUB_USERNAME }}/ch4-project:latest

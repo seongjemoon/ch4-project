@@ -30,10 +30,6 @@ spring:
   config:
     import: aws-parameterstore:/config/ch4-project/
 
-app:
-  s3:
-    bucket: ${APP_S3_BUCKET}
-
 management:
   endpoints:
     web:
